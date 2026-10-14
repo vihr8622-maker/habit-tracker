@@ -1,5 +1,6 @@
+import json
 from datetime import date
-
+import os
 
 class Habit:
     def __init__(self, name: str):
@@ -36,3 +37,41 @@ h.rename("Python руками")
 print(h.status())
 h.reset()
 print(h.status())
+if os.path.exists("habits.json"):
+    with open("habits.json", "r", encoding="utf-8") as f:
+        loaded = json.load(f)
+    habits = []
+    for item in loaded:
+        h = Habit(item["name"])
+        h.done = item["done"]
+        h.streak = item["streak"]
+        h.created_at = item["created_at"]
+        habits.append(h)
+    print("Привычки загружены из файла.")
+else:
+    habits = [
+        Habit("Сон 7–8 часов"),
+        Habit("Код 30 минут"),
+        Habit("Прогулка 10 минут"),
+    ]
+    print("Файла нет. Создаю привычки заново.")
+
+for h in habits:
+    print(h.status())
+
+habits[0].mark_done()
+print(habits[0].status())
+print(habits[2].status())
+to_save = []
+for h in habits:
+   to_save.append({
+        "name": h.name,
+        "done": h.done,
+        "streak": h.streak,
+        "created_at": h.created_at,
+    })
+
+with open("habits.json", "w", encoding="utf-8") as f:
+    json.dump(to_save, f, ensure_ascii=False, indent=2)
+
+print("Сохранено в habits.json")
