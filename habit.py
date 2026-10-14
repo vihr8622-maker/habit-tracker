@@ -1,3 +1,4 @@
+Это так
 import json
 from datetime import date
 import os
@@ -29,14 +30,6 @@ class Habit:
         return f"{self.name}: не выполнено, серия {self.streak} (с {self.created_at})"
 
 
-h = Habit("Ручной код")
-print(h.status())
-h.mark_done()
-print(h.status())
-h.rename("Python руками")
-print(h.status())
-h.reset()
-print(h.status())
 if os.path.exists("habits.json"):
     with open("habits.json", "r", encoding="utf-8") as f:
         loaded = json.load(f)
@@ -59,9 +52,20 @@ else:
 for h in habits:
     print(h.status())
 
-habits[0].mark_done()
-print(habits[0].status())
-print(habits[2].status())
+print("\nЧто сделать?")
+print("1. Отметить привычку выполненной")
+print("2. Выход")
+choice = input("Твой выбор: ").strip()
+
+if choice == "1":
+    for i, h in enumerate(habits, 1):
+        print(f"{i}. {h.name}")
+    num = input("Номер привычки: ").strip()
+    if num.isdigit():
+        idx = int(num) - 1
+        if 0 <= idx < len(habits):
+            habits[idx].mark_done()
+            print(f"Отмечено: {habits[idx].status()}")
 to_save = []
 for h in habits:
    to_save.append({
